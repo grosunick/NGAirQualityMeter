@@ -11,6 +11,7 @@ endif()
 
 message("Build type: " ${CMAKE_BUILD_TYPE})
 if(CMAKE_BUILD_TYPE MATCHES Test)
+    set(CMAKE_BUILD_TYPE "Debug")
     add_subdirectory(Lib/ngSTLib)
 else()
     include("cmake/gcc-arm-none-eabi.cmake") # Include toolchain file
