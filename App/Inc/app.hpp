@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -11,4 +12,5 @@ void app_c(void);
 }
 #endif
 
+extern int16_t val;
 void app(void);
