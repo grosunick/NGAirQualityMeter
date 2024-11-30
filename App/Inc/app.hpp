@@ -11,4 +11,4 @@ void app_c(void);
 }
 #endif
 
-[[noreturn]] void app(void);
+void app(void);

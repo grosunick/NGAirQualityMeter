@@ -1,28 +1,26 @@
+#include <stdio.h>
 #include "app.hpp"
 #include "gpio.h"
-#include <stdio.h>
+#include <gpio/ShiftRegister.hpp>
+#include <segment/driver/DriverHC595.hpp>
+#include <segment/SegmentDisplay.hpp>
+
+using namespace ng;
+
+using HC595 = DriverHC595<ShiftRegister<GPIOA_BASE, 8, GPIOA_BASE, 11, GPIOA_BASE, 12>>;
+using Segment = SegmentDisplay<HC595>;
 
 extern "C" void app_c(void) {
     app();
 }
 
-class TEST
-{
-public:
-    static void toggle_print();
-};
-
-void TEST::toggle_print() {
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-}
-
-[[noreturn]] void app() {
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-
+void app() {
     while (true) {
-        TEST::toggle_print();
-        HAL_Delay(100);
-        printf("Hello world!!!\n");
+        Pin<GPIOA_BASE, 5, Write>::toggle();
+        HAL_Delay(1);
+
+        // Segment::setNumber(5555, 0, true);
+        Segment::setText("0000");
     }
 }
 

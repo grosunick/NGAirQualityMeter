@@ -9,66 +9,19 @@ if(NOT CMAKE_BUILD_TYPE) # Define the build type
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-# Set the project name
-set(CMAKE_PROJECT_NAME mastering)
-
-
-include("cmake/gcc-arm-none-eabi.cmake") # Include toolchain file
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE) # Enable compile command to ease indexing with e.g. clang
-
-# Enable CMake support for ASM, C and С++ languages
-enable_language(CXX C ASM)
-set(CMAKE_CXX_STANDARD 23)
-
-# Core project settings
-project(${CMAKE_PROJECT_NAME})
 message("Build type: " ${CMAKE_BUILD_TYPE})
+if(CMAKE_BUILD_TYPE MATCHES Test)
+    add_subdirectory(Lib/ngSTLib)
+else()
+    include("cmake/gcc-arm-none-eabi.cmake") # Include toolchain file
+    set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE) # Enable compile command to ease indexing with e.g. clang
 
-# Create an executable object type
-add_executable(${CMAKE_PROJECT_NAME})
+    # Enable CMake support for ASM, C and С++ languages
+    enable_language(CXX C ASM)
+    set(CMAKE_CXX_STANDARD 23)
 
-# Add STM32CubeMX generated sources
-add_subdirectory(cmake/stm32cubemx)
+    set(CMAKE_PROJECT_NAME mastering) # Set the project name
+    project(${CMAKE_PROJECT_NAME}) # Core project settings
 
-# Link directories setup
-target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined library search paths
-)
-
-file(GLOB_RECURSE SOURCES "App/*.*")
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE # Add user sources here
-    ${SOURCES}
-)
-
-# Add include paths
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    App/Inc
-)
-
-# Add project symbols (macros)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined symbols
-)
-
-# Add linked libraries
-target_link_libraries(${CMAKE_PROJECT_NAME}
-    stm32cubemx
-    # Add user defined libraries
-)
-
-set(HEX_FILE ${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.hex)
-set(BIN_FILE ${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin)
-
-message(${CMAKE_CURRENT_BINARY_DIR})
-
-add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${CMAKE_PROJECT_NAME}> ${HEX_FILE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${CMAKE_PROJECT_NAME}> ${BIN_FILE}
-        COMMENT "Building ${HEX_FILE}
-Building ${BIN_FILE}")
-
-add_custom_target(program
-        COMMAND
-            STM32_Programmer_CLI
-            -c port=SWD reset=HWrst mode=UR -w ${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin 0x08000000 -rst
-        VERBATIM)
+    include(cmake/app.cmake)
+endif()
