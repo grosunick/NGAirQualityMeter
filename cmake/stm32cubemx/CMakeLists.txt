@@ -7,6 +7,7 @@ add_library(stm32cubemx INTERFACE)
 enable_language(C ASM)
 
 target_compile_definitions(stm32cubemx INTERFACE 
+	USE_FULL_LL_DRIVER 
 	USE_HAL_DRIVER 
 	STM32L152xB 
 	STM32_THREAD_SAFE_STRATEGY=2
@@ -28,6 +29,9 @@ target_sources(stm32cubemx INTERFACE
     ../../Core/Src/usart.c
     ../../Core/Src/stm32l1xx_it.c
     ../../Core/Src/stm32l1xx_hal_msp.c
+    ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_ll_rcc.c
+    ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_ll_utils.c
+    ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_ll_exti.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim_ex.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_uart.c
