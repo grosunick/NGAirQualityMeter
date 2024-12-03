@@ -14,3 +14,4 @@ void app_c(void);
 
 extern int16_t val;
 void app(void);
+void debug(char* data);

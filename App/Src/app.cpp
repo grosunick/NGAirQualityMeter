@@ -1,5 +1,6 @@
 #include "app.hpp"
 #include "gpio.h"
+#include "usart.h"
 #include <gpio/ShiftRegister.hpp>
 #include <segment/driver/DriverHC595.hpp>
 #include <segment/SegmentDisplay.hpp>
@@ -15,18 +16,25 @@ extern "C" void app_c(void) {
 }
 
 void app() {
-    while (true) {
-//        Pin<GPIOA_BASE, 5, Write>::toggle();
-//        HAL_Delay(1);
+    debug("Hello world from stm32!\n");
 
+    while (true) {
         Segment::setNumber(val);
     }
 }
 
+void debug(char* data) {
+    HAL_UART_Transmit(&huart2, (uint8_t*)data, strlen(data), HAL_MAX_DELAY);
+}
+
 extern "C" int _write(int file, char *ptr, int len) {
-    (void)file; // hack for compiler warning about unused parameter file
-    for (int i = 0; i < len; i++) {
-        ITM_SendChar(*ptr++);
+    if (file == 1) {
+        HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
+    } else {
+        for (int i = 0; i < len; i++) {
+            ITM_SendChar(*ptr++);
+        }
     }
+
     return len;
 }
