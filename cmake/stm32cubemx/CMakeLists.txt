@@ -24,10 +24,12 @@ target_include_directories(stm32cubemx INTERFACE
 target_sources(stm32cubemx INTERFACE
     ../../Core/Src/main.c
     ../../Core/Src/gpio.c
+    ../../Core/Src/usart.c
     ../../Core/Src/stm32l1xx_it.c
     ../../Core/Src/stm32l1xx_hal_msp.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_tim_ex.c
+    ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_uart.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc.c
     ../../Drivers/STM32L1xx_HAL_Driver/Src/stm32l1xx_hal_rcc_ex.c
