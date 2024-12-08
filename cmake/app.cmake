@@ -10,6 +10,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SOURCES})
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE # Add include paths
     App/Inc
     Lib/ngSTLib/src
+    Lib/ngSTLib/include
 )
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE)

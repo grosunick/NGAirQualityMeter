@@ -88,6 +88,7 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -110,8 +111,8 @@ void SystemClock_Config(void)
 
   LL_FLASH_Enable64bitAccess();
 
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
-  while(LL_FLASH_GetLatency()!= LL_FLASH_LATENCY_0)
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
+  while(LL_FLASH_GetLatency()!= LL_FLASH_LATENCY_1)
   {
   }
   LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
@@ -126,17 +127,25 @@ void SystemClock_Config(void)
 
   }
   LL_RCC_HSI_SetCalibTrimming(16);
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSI, LL_RCC_PLL_MUL_4, LL_RCC_PLL_DIV_2);
+  LL_RCC_PLL_Enable();
 
-   /* Wait till System clock is ready */
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI)
+   /* Wait till PLL is ready */
+  while(LL_RCC_PLL_IsReady() != 1)
   {
 
   }
-  LL_SetSystemCoreClock(16000000);
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+
+   /* Wait till System clock is ready */
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
+  {
+
+  }
+  LL_SetSystemCoreClock(32000000);
 
    /* Update the time base */
   if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
